@@ -3,9 +3,22 @@ $(() => {
     const player = {
         name: "Type Slayer",
         health: 100,
-        weapons: ["chainsaw", "bfg9000"],
-        score: 0
+        weapons: ["bfg9000"],
     }
+
+    let score = 0;
+    let killedEnemies =0;
+    //players attack function
+    const playerAttack = () => {
+        if ($input.val == $prompt.val) {
+            Enemy.health -= 20;
+            score += 100;
+        } else if ($input.val != $prompt.val){
+            Enemy.attack();
+            score -= 50;
+        }    
+    }
+
     //declaring array for all typing words. Random selection
     const words = ['air', 'answer', 'being', 'miss', 'year', 'I', 'move', 'eat', 'always', 'away', 'sun', 'get', 'great', 'air', 'page', 'feet', 'different', 'had', 'without', 'study', 'mile', 'think', 'need', 'let', 'mean', 'went', 'almost', 'to', 'how', 'them', 'upon', 'when', 'kind', 'it', 'are', 'about', 'call', 'food', 'air', 'or', 'example', 'state', 'cut', 'may', 'hand', 'would', 'should', 'work', 'good', 'sun', 'form', 'see', 'also', 'different', 'grow', 'get', 'few', 'began', 'find', 'no', 'carry', 'sun', 'through', 'say', 'but', 'those', 'been', 'follow', 'see', 'most', 'point', 'call', 'small', 'back', 'another', 'he', 'that', 'answer', 'time', 'plant', 'went', 'pizazz', 'piazzas', 'pizzas', 'suburban', 'assuming', 'obstinance', 'foramens'];
 
@@ -22,34 +35,19 @@ $(() => {
         }
     }
 
-    const playerAttack = () => {
-        if (player.weapon == "chainsaw"){ 
-            Enemy.this.health -= 10
-        } else if (player.weapon == "bfg9000"){
-            Enemy.this.health -= 20
-        }
-    }
-
     //function to start a new game
-    const gameStart = () => {
-        showHealth();
-        $prompt.text(words[Math.floor(Math.random()*(words.length))])
-        
-
-    }
-
+    
     //function submit. when button pressed compare input to prompt. if else statement for player interaction.  
     const submit = () => {
-        if ($input.val == $prompt.val) {
-            playerAttack()
-            player.score += 100
+        
         } else if ($input.val != $prompt.val) {
-            Enemy.attack()
+            Enemy.this.attack()
             player.score -=50
         }
         $input.val('')
         $prompt.text(words[Math.floor(Math.random()*(words.length))])
         console.log(player.health)
+        console.log(Enemys.health)
     }
     
     //creating div where word to type is displayed
@@ -77,12 +75,17 @@ $(() => {
         submit($(e.target))
     })
 
-    $interact.appendTo($('body'))
     $('body').append('<br>')
-    $prompt.appendTo($('body'))
     $start.appendTo($('body'))
     $score.appendTo($footer)
     $footer.appendTo('body')
+
+    const gameStart = () => {
+        showHealth();
+        $prompt.appendTo($('body'))
+        $interact.appendTo($('body'))
+        $prompt.text(words[Math.floor(Math.random()*(words.length))])
+    }
 
     const showHealth = () => {
         for (let i = 0; i < 5; i++){
@@ -90,6 +93,18 @@ $(() => {
             $fifth.appendTo($health)
             if (player.health < 80){
                 $fifth.remove
+            }
+             if (player.health < 60){
+                $fifth.remove
+            }
+            if (player.health < 40){
+                $fifth.remove
+            }
+            if (player.health < 20){
+                $fifth.remove
+            }
+            if (player.health == 0){
+                return 
             }
         }
         
