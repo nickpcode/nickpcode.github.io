@@ -6,11 +6,9 @@ $(() => {
         weapons: ["bfg9000"],
     }
 
-    let score = 0;
-    let killedEnemies =0;
-    //players attack function
+        //players attack function
     const playerAttack = () => {
-        if ($input.val == $prompt.val) {
+        if ($input.val === $prompt.val) {
             Enemy.health -= 20;
             score += 100;
         } else if ($input.val != $prompt.val){
@@ -18,7 +16,12 @@ $(() => {
             score -= 50;
         }    
     }
+    
+    let score = 0;
 
+    let killedEnemies = 0;
+
+ 
     //declaring array for all typing words. Random selection
     const words = ['air', 'answer', 'being', 'miss', 'year', 'I', 'move', 'eat', 'always', 'away', 'sun', 'get', 'great', 'air', 'page', 'feet', 'different', 'had', 'without', 'study', 'mile', 'think', 'need', 'let', 'mean', 'went', 'almost', 'to', 'how', 'them', 'upon', 'when', 'kind', 'it', 'are', 'about', 'call', 'food', 'air', 'or', 'example', 'state', 'cut', 'may', 'hand', 'would', 'should', 'work', 'good', 'sun', 'form', 'see', 'also', 'different', 'grow', 'get', 'few', 'began', 'find', 'no', 'carry', 'sun', 'through', 'say', 'but', 'those', 'been', 'follow', 'see', 'most', 'point', 'call', 'small', 'back', 'another', 'he', 'that', 'answer', 'time', 'plant', 'went', 'pizazz', 'piazzas', 'pizzas', 'suburban', 'assuming', 'obstinance', 'foramens'];
 
@@ -32,6 +35,7 @@ $(() => {
 //function to attack player reducing player health by their strength
         attack = (player) => {
             player.health -= this.strength
+            showModal("You got hit for " + this.strength + " health")
         }
     }
 
@@ -39,15 +43,17 @@ $(() => {
     
     //function submit. when button pressed compare input to prompt. if else statement for player interaction.  
     const submit = () => {
-        
-        } else if ($input.val != $prompt.val) {
-            Enemy.this.attack()
-            player.score -=50
-        }
+        playerAttack();
         $input.val('')
         $prompt.text(words[Math.floor(Math.random()*(words.length))])
+        showModal("enemy has " + Enemy.health + " health")
         console.log(player.health)
-        console.log(Enemys.health)
+    }
+
+    //modal message function. From modal lesson.
+    const showModal = (message) => {
+        $('#modal-textbox').text(message);
+        $('#modal').css('display', 'flex');
     }
     
     //creating div where word to type is displayed
@@ -57,7 +63,7 @@ $(() => {
     const $interact = $('<div>').addClass('inter')
     const $input  = $('<input>').addClass('input')
     const $submit = $('<button>').addClass('submit').html('submit')
-    const $score = $('<div>').addClass('score').text(player.score)
+    const $score = $('<div>').addClass('score').text(score)
     $submit.on('click', (e) =>{
         submit($(e.target))
     })
@@ -118,5 +124,4 @@ $(() => {
     for(let i = 0; i < randomLevel.length; i++){
         $(randomLevel[i])
     }
-    
 })
