@@ -3,23 +3,29 @@ $(() => {
     //declaring array for all typing words. Random selection
     const words = ['air', 'answer', 'being', 'miss', 'year', 'I', 'move', 'eat', 'always', 'away', 'sun', 'get', 'great', 'air', 'page', 'feet', 'different', 'had', 'without', 'study', 'mile', 'think', 'need', 'let', 'mean', 'went', 'almost', 'to', 'how', 'them', 'upon', 'when', 'kind', 'it', 'are', 'about', 'call', 'food', 'air', 'or', 'example', 'state', 'cut', 'may', 'hand', 'would', 'should', 'work', 'good', 'sun', 'form', 'see', 'also', 'different', 'grow', 'get', 'few', 'began', 'find', 'no', 'carry', 'sun', 'through', 'say', 'but', 'those', 'been', 'follow', 'see', 'most', 'point', 'call', 'small', 'back', 'another', 'he', 'that', 'answer', 'time', 'plant', 'went', 'pizazz', 'piazzas', 'pizzas', 'suburban', 'assuming', 'obstinance', 'foramens'];
 
+    const images = ['../images/BallAndChainTrooper.png', '../images/Bomb-Knight-Sprite.png', '../images/Hinox-Sprite-1.png', '../images/Stalfos-Knight-1.png'];
+    
     //create character class
     class Character{
-        constructor(name, health, strength) {
+        constructor(name, health, strength, image) {
             this.name = name
             this.health = health
             this.strength = strength;
+            this.image = image
         }
     }
+
      //create enemy class
-     class Enemy extends Character {
+    class Enemy extends Character {
         constructor() {
             let name = "Dungeon Monster";
-        //randomized health and strength
+            //randomized health and strength
             let health = Math.floor(Math.random() * 21) + 30;
-            let strength = Math.floor(Math.random() * 4) + 9; 
-            super(name, health, strength);
+            let strength = Math.floor(Math.random() * 4) + 9;
+            let image = images[Math.floor(Math.random() * 4 )] 
+            super(name, health, strength, image);
         }
+
     //function to attack player reducing player health by enemy strength
         attack (op) {
             op.health -= this.strength
@@ -29,36 +35,40 @@ $(() => {
 
     //create player
     class Player extends Character {
-        playerAttack (op) {
+        playerAttack (en) {
             const submit = () => {
-                this.playerAttack(op);
+                this.playerAttack(en);
                 $input.val('')
                 $prompt.text(words[Math.floor(Math.random()*(words.length))])
-                showModal(op.name + " has " + op.health + " health")
+                showModal(en.name + " has " + en.health + " health")
                 console.log(player.health)
             }
-            //code referenced from tic tac toe assignment. On click button runs submit function.
-            $submit.on('click', (e) =>{
+            // //code referenced from tic tac toe assignment. On click button runs submit function.
+            $submit.on('click', (e) => {
                 submit($(e.target))
+                const input = $input.val();
+                if (input === $prompt.text()) {
+                    en.health -= this.strength;
+                    score += 100;
+                } else if (input != $prompt.text()){
+                    en.attack(player);
+                    score -= 50;
+                }  
+                console.log(input)
+                console.log($prompt.text())
             })
-            let input = $input.val()
-            if (input === $prompt.text()) {
-                op.health -= this.strength;
-                score += 100;
-            } else if (input != $prompt.text()){
-                op.attack(player);
-                score -= 50;
-            }  
-        
+            
         }
     }
-   
+
     //player stats
-    const player = new Player('Type Slayer', 100, 20);
+    const player = new Player('Type Slayer', 100, 20, '../images/bfg_9000_by_owmander_ddujo64-350t.png');
+
     //generate random level of monsters to fight
     const randomLevel = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 7; i++) {
         randomLevel.push(new Enemy(Enemy.name + i));
+        console.log(randomLevel[i])
     } 
 
     //modal message function. From modal lesson.
@@ -66,8 +76,10 @@ $(() => {
         $('#modal-textbox').text(message);
         $('#modal').css('display', 'flex');
     }
+    
     //player score starts at 0
     let score = 0;
+
     //creating dom with jquery
     const $health = $('<div>').addClass('health')
     const $header = $('<header>').addClass('header')
@@ -88,16 +100,7 @@ $(() => {
             const $fifth = $('<div>').addClass('fifth');
             $fifth.appendTo($health)
             if (user.health < 80){
-                $fifth.remove()
-            }
-            if (user.health < 60){
-                $fifth.remove()
-            }
-            if (user.health < 40){
-                $fifth.remove()
-            }
-            if (user.health < 20){
-                $fifth.remove()
+                $fifth.toggleClass('none')
             }
         }
     }
@@ -145,4 +148,3 @@ $(() => {
         $submit.clicked
     }
 })
-    
